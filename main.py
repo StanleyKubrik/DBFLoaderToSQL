@@ -1,12 +1,32 @@
-import os
+def nearest_value(values: set, one: int) -> int:
+    # your code here
+    # result = 0
+    # min_diff = max(values) - one
+    # for i in values:
+    #     if len(values) == 1:
+    #         result = min(i, one)
+    #         break
+    #     if abs(one - i) <= min_diff:
+    #         min_diff = abs(one - i)
+    #         result = i
+    abs_diff_func = lambda list_value: abs(list_value - one)
+    closest_value = min(values, key=abs_diff_func)
+    return closest_value
 
-base_path = '//192.168.4.2//Z//1C_Bases//kolbaska//'  # 'C:\\Users\\SUPERMAN\\Documents\\2022_01_13\\'
-tree = os.walk(base_path)
-folder = []
-for i in tree:
-    folder.append(i)
-files = folder[0][2]
-for i in files:
-    if i.endswith('.DBF'):
-        file_size = os.path.getsize(folder[0][0] + i)
-        print(i, file_size)
+
+if __name__ == "__main__":
+    print("Example:")
+    print(nearest_value({4, 7, 10, 11, 12, 17}, 9))
+
+    # These "asserts" are used for self-checking and not for an auto-testing
+    assert nearest_value({4, 7, 10, 11, 12, 17}, 9) == 10
+    assert nearest_value({4, 7, 10, 11, 12, 17}, 8) == 7
+    assert nearest_value({4, 8, 10, 11, 12, 17}, 9) == 8
+    assert nearest_value({4, 9, 10, 11, 12, 17}, 9) == 9
+    assert nearest_value({4, 7, 10, 11, 12, 17}, 0) == 4
+    assert nearest_value({4, 7, 10, 11, 12, 17}, 100) == 17
+    assert nearest_value({5, 10, 8, 12, 89, 100}, 7) == 8
+    assert nearest_value({5}, 5) == 5
+    assert nearest_value({5}, 7) == 5
+    assert nearest_value({0, -2}, -1) == -2
+    print("Coding complete? Click 'Check' to earn cool rewards!")
