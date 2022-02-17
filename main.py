@@ -6,13 +6,17 @@ import pyodbc
 # dbf.to_csv('DH5188.csv')
 # print(df)
 
-server = 'POWERBIListener'
+driver = '{ODBC Driver 18 for SQL Server}'
+server = 'powerbivm1.dpst.kola'
 database = 'petrykivka_test'
 username = 'sukhonosovn'
 password = 'Fe%f8Pyz'
 
-conn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID='
-                      + username + ';PWD=' + password)
+conn = pyodbc.connect(driver=driver,
+                      server=server,
+                      database=database,
+                      uid=username,
+                      pwd=password)
 cursor = conn.cursor()
 cursor.execute('SELECT * FROM gender')
 
