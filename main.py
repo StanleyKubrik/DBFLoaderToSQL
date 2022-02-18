@@ -13,7 +13,7 @@ def create_csv_from_dbf(dbf_file: str):
         print('DBF-file not found in current directory!')
 
 
-def connect_to_sql() -> pyodbc.connect:
+def connector() -> pyodbc.connect:
     driver = '{ODBC Driver 17 for SQL Server}'
     server = 'powerbivm1.dpst.kola'
     database = 'petrykivka_test'
