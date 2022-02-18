@@ -2,6 +2,10 @@ import keyring
 import pandas as pd
 import pyodbc
 from simpledbf import Dbf5
+from tkinter import simpledialog
+
+
+PROGRAM_NAME = 'DBF loader to SQL'
 
 
 def create_csv_from_dbf(dbf_file: str):
@@ -33,7 +37,9 @@ def connector() -> pyodbc.connect:
 
 
 if __name__ == '__main__':
-    dbf_name = input('Enter full name of the DBF file (without extension, not case sensitive): ')
-    create_csv_from_dbf(dbf_name)
+    # dbf_name = input('Enter full name of the DBF file (without extension, not case sensitive): ')
+    # create_csv_from_dbf(dbf_name)
     # df = pd.read_csv()
     # print(df)
+    input_value = simpledialog.askstring(PROGRAM_NAME,
+                                         'Enter full name of the DBF file (without extension, not case sensitive):')
