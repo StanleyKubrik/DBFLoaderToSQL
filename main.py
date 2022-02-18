@@ -7,7 +7,7 @@ from simpledbf import Dbf5
 def create_csv_from_dbf(dbf_file: str):
     try:
         dbf = Dbf5(dbf_file + '.dbf', codec='Windows-1251')
-        dbf.to_csv(dbf_file.join('.csv'))
+        dbf.to_csv(dbf_file + '.csv')
         print('CSV-file from dbf created!')
     except FileNotFoundError:
         print('DBF-file not found in current directory!')
