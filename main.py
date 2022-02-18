@@ -2,19 +2,18 @@ import keyring
 import pandas as pd
 import pyodbc
 from simpledbf import Dbf5
-from tkinter import simpledialog
+from tkinter import filedialog
 
 
-PROGRAM_NAME = 'DBF loader to SQL'
-
-
-def create_csv_from_dbf(dbf_file: str):
-    try:
-        dbf = Dbf5(dbf_file + '.dbf', codec='Windows-1251')
-        dbf.to_csv(dbf_file + '.csv')
-        print('CSV-file from dbf created!')
-    except FileNotFoundError:
-        print('DBF-file not found in current directory!')
+def create_csv_from_dbf(dbf_file_list: list):
+    for dbf_file in dbf_file_list:
+        try:
+            dbf = Dbf5(dbf_file, codec='Windows-1251')
+            csv_name = str(dbf_file).upper().replace('.DBF', '.CSV')
+            dbf.to_csv(csv_name, header=True)
+            print(csv_name + ' created!')
+        except FileNotFoundError:
+            print(f'DBF-file {dbf_file} not found in current directory!')
 
 
 def connector() -> pyodbc.connect:
@@ -37,9 +36,12 @@ def connector() -> pyodbc.connect:
 
 
 if __name__ == '__main__':
-    # dbf_name = input('Enter full name of the DBF file (without extension, not case sensitive): ')
-    # create_csv_from_dbf(dbf_name)
-    # df = pd.read_csv()
-    # print(df)
-    input_value = simpledialog.askstring(PROGRAM_NAME,
-                                         'Enter full name of the DBF file (without extension, not case sensitive):')
+    # files_name = filedialog.askopenfilenames()
+    # dbf_files_list = []
+    # for i in files_name:
+    #     if '.dbf'.lower() in i.split('/')[-1].lower():
+    #         dbf_files_list.append(i.split('/')[-1])
+    # create_csv_from_dbf(dbf_files_list)
+    # df = pd.read_csv('DH5188.CSV', encoding='Windows-1251')
+    dbf = Dbf5('DH5188.DBF', codec='Windows-1251')
+    print(dbf.to_dataframe())
