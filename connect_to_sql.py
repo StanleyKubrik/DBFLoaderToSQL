@@ -7,7 +7,7 @@ def connector() -> pyodbc.connect:
     server = 'powerbivm1.dpst.kola'
     database = 'petrykivka_test'
     username = 'sukhonosovn'
-    password = keyring.get_password('SQL', username)
+    password = 'Fe%f8Pyz'  # keyring.get_password('SQL', username)
     print('Connection to SQL DB...')
     try:
         conn = pyodbc.connect('DRIVER=' + driver
