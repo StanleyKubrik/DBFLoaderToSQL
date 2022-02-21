@@ -6,4 +6,4 @@ from config import *
 if __name__ == '__main__':
     # files_name = filedialog.askopenfilenames()
     config = Config('settings_Petrykivka.ini')
-    print(config.get_section('DT5188'))
+    print(config.get_setting('DH5188', 'IDDOC'))
