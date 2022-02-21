@@ -1,6 +1,7 @@
 from tkinter import filedialog
 from connect_to_sql import connector
 from dbf_to_csv import *
+import configparser
 
 if __name__ == '__main__':
     # files_name = filedialog.askopenfilenames()
@@ -8,4 +9,6 @@ if __name__ == '__main__':
     # df = pd.read_csv('DH5188.CSV', encoding='Windows-1251')
     # dbf = Dbf5('DH5188.DBF', codec='Windows-1251')
     # print(dbf.to_dataframe())
-    print('OK')
+    parser = configparser.RawConfigParser()
+    parser.read('settings_Petrykivka.ini')
+    print(parser.sections())
