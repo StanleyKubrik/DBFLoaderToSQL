@@ -17,3 +17,10 @@ class Config:
 
     def has_section(self, name):
         return self.configuration.has_section(name)
+
+    def get_dict_from_dbf(self, section):
+        field_dict = {}
+        keys = self.configuration.options(section=section)
+        for k in keys:
+            field_dict[k] = self.configuration.get(section, k).split()[0]
+        return field_dict
