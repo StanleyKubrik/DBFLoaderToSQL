@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/DBF loader to SQL.iml" filepath="$PROJECT_DIR$/.idea/DBF loader to SQL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/DBFLoaderToSQL.iml" filepath="$PROJECT_DIR$/.idea/DBFLoaderToSQL.iml" />
     </modules>
   </component>
 </project>

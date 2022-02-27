@@ -1,11 +1,20 @@
 import configparser
 from sql import *
-from dbf_to_csv import *
+from dbf import *
 from config import *
 import pandas as pd
 import glob
 from simpledbf import Dbf5
 import re
+
+DBF_FILE = 'DH5188.DBF'
+CONFIG_PATH = 'settings_Petrykivka.ini'
+
+
+def insert_into_table(from_dbf: str, to_sql: str):
+    cfg = Config(CONFIG_PATH)
+    field_dict = cfg.get_dict_from_dbf()
+
 
 if __name__ == '__main__':
     # try:
@@ -23,12 +32,4 @@ if __name__ == '__main__':
     # dbf = Dbf5(path, codec='1251')
     # df = dbf.to_dataframe()
     # print(len(df))
-    df = pd.read_sql_query('INSERT INTO gender'
-                           '('
-                           'ID'
-                           ',DESCR'
-                           # ',ID_c'
-                           ')'
-                           "VALUES('5KF      ', N'Средний')",
-                           connector())
-    print(df)
+    print()
