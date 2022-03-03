@@ -38,4 +38,4 @@ def insert_into_table(dbf_file_from: str, sql_table_to: str):
 
 if __name__ == '__main__':
     insert_into_table(DBF_FILE, 'TypeOfServices')
-
+    # https://www.dataquest.io/blog/sql-insert-tutorial/
