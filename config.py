@@ -1,5 +1,6 @@
 import configparser
 import os
+import re
 
 
 class Config:
@@ -18,8 +19,13 @@ class Config:
     def has_section(self, name):
         return self.configuration.has_section(name)
 
-    def get_dict_from_dbf(self, section):
+    def get_dict_from_dbf(self, dbf_file_name: str):
         field_dict = {}
+        if dbf_file_name.startswith('SC'):
+            section_list = re.findall('\d+', dbf_file_name.split('.')[0])
+            section = ''.join(section_list)
+        else:
+            section = dbf_file_name.split('.')[0]
         keys = self.configuration.options(section=section)
         for k in keys:
             field_dict[k] = self.configuration.get(section, k).split()[0]

@@ -1,4 +1,5 @@
 import sqlalchemy
+from sqlalchemy import insert
 import keyring
 import pandas as pd
 
@@ -24,12 +25,12 @@ def connector() -> sqlalchemy.engine:
 
 def get_table_fields_name(table_name: str, db_name='') -> pd.read_sql_query:
     try:
-        fields_name = pd.read_sql_query("SELECT COLUMN_NAME "
-                                        "FROM INFORMATION_SCHEMA.COLUMNS "
-                                        f"WHERE TABLE_NAME = N'{table_name}'",
-                                        connector())
-        if fields_name.empty:
+        pd_query = pd.read_sql_query("SELECT COLUMN_NAME "
+                                     "FROM INFORMATION_SCHEMA.COLUMNS "
+                                     f"WHERE TABLE_NAME = N'{table_name}'",
+                                     connector())
+        if pd_query.empty:
             raise NameError('EmptyDataFrame')
-        return fields_name
+        return pd_query.values.tolist()
     except NameError as ne:
         return f'ERROR: {ne}'
