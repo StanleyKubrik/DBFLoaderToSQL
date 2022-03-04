@@ -28,5 +28,5 @@ class Config:
             section = dbf_file_name.split('.')[0]
         keys = self.configuration.options(section=section)
         for k in keys:
-            field_dict[k] = self.configuration.get(section, k).split()[0]
+            field_dict[k] = self.configuration.get(section, k).split()[0].upper()
         return field_dict
