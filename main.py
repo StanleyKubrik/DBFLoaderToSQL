@@ -50,18 +50,17 @@ def insert_into_table(dbf_file_from: str, sql_table_to: str):
                     df = df.replace({v: pad_field_with_spaces(v)})
 
         sql_table = pd.read_sql_table(sql_table_to, conn, columns=id_fields)
-        print(sql_table[id_fields[0]].values)
 
         # Writing DataFrame to SQL DB.
         # Check rows count before insert.
         before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Inserting DF to SQL.
-        df.to_sql(sql_table_to, conn, if_exists='append', index=False, chunksize=500)
-        # for row in df.itertuples(index=False, name=None):
-        #     if row[0] not in sql_table[id_fields[0]].values:
-        #         df.to_sql(str(row), conn, if_exists='append', index=False, chunksize=500)
-        #     else:
-        #         print(f'Table "{sql_table_to}" already exist key "{row[0]}"!')
+        for row in df.itertuples(index=False, name=None):
+            if row[0] not in sql_table[id_fields[0]].values:
+                df_row = pd.DataFrame(row)
+                df_row.to_sql(str(row), conn, if_exists='append', index=False, chunksize=500)
+            else:
+                print(f'Table "{sql_table_to}" already exist key "{row[0]}"!')
         # Check rows count after insert.
         after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Calculating and output inserted rows quantity.
