@@ -1,3 +1,5 @@
+import keyring
+
 from sql import *
 from config import *
 import pandas as pd
@@ -5,10 +7,12 @@ from simpledbf import Dbf5
 from sqlalchemy import *
 
 DBF_FILE = 'SC5174.DBF'
+SQL_TABLE = 'TypeOfServices'
 CONFIG_PATH = 'settings_Petrykivka.ini'
 
 
 def pad_field_with_spaces(field: str) -> str:
+    field = field.strip()
     if len(field) > 1 and str(field).endswith('1'):
         return str(field).rjust(7) + '  '
     else:
@@ -43,19 +47,21 @@ def insert_into_table(dbf_file_from: str, sql_table_to: str):
         for col in df.columns:
             if col in id_fields:  # Check if fields is ID.
                 for v in df[col].values:
-                    df = df.replace({v: pad_field_with_spaces(v.strip())})
+                    df = df.replace({v: pad_field_with_spaces(v)})
 
         sql_table = pd.read_sql_table(sql_table_to, conn, columns=id_fields)
+        print(sql_table[id_fields[0]].values)
 
         # Writing DataFrame to SQL DB.
         # Check rows count before insert.
         before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Inserting DF to SQL.
-        for row in df.itertuples(index=False, name=None):
-            if row[0] not in sql_table[id_fields[0]].values:
-                df.to_sql(str(row), conn, if_exists='append', index=False, chunksize=500)
-            else:
-                print(f'Table "{sql_table_to}" already exist key "{row[0]}"!')
+        df.to_sql(sql_table_to, conn, if_exists='append', index=False, chunksize=500)
+        # for row in df.itertuples(index=False, name=None):
+        #     if row[0] not in sql_table[id_fields[0]].values:
+        #         df.to_sql(str(row), conn, if_exists='append', index=False, chunksize=500)
+        #     else:
+        #         print(f'Table "{sql_table_to}" already exist key "{row[0]}"!')
         # Check rows count after insert.
         after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Calculating and output inserted rows quantity.
@@ -74,4 +80,4 @@ def insert_into_table(dbf_file_from: str, sql_table_to: str):
 
 
 if __name__ == '__main__':
-    insert_into_table(DBF_FILE, 'TypeOfServices')
+    insert_into_table(DBF_FILE, SQL_TABLE)

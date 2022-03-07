@@ -24,12 +24,12 @@ def connector():
         return engine
 
 
-def get_table_fields_name(self, table_name: str, db_name='') -> pd.read_sql_query:
+def get_table_fields_name(table_name: str, db_name='') -> pd.read_sql_query:
     try:
         pd_query = pd.read_sql_query("SELECT COLUMN_NAME "
                                      "FROM INFORMATION_SCHEMA.COLUMNS "
                                      f"WHERE TABLE_NAME = N'{table_name}'",
-                                     self)
+                                     connector())
         if pd_query.empty:
             raise NameError('EmptyDataFrame')
         return pd_query.values.tolist()
