@@ -19,6 +19,9 @@ class Config:
     def has_section(self, name):
         return self.configuration.has_section(name)
 
+    def has_option(self, section, option):
+        return self.configuration.has_option(section, option)
+
     def get_dict_from_dbf(self, dbf_file_name: str):
         field_dict = {}
         if dbf_file_name.startswith('SC'):
