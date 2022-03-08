@@ -68,28 +68,28 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
                 id_fields.append(value.upper())
 
         # # Appending spaces to each value in the specified column.
-        # for col in df.columns:
-        #     if col in id_fields:  # Check if fields is ID.
-        #         for v in df[col].values:
-        #             df = df.replace({v: pad_field_with_spaces(v)})
+        for col in df.columns:
+            if col in id_fields:  # Check if fields is ID.
+                for v in df[col].values:
+                    df = df.replace({v: pad_field_with_spaces(v)})
 
-        sql_table_id_columns = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
-        print(sql_table_id_columns.columns)  # [0] == id_fields[0])
+        sql_table = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
+        sql_table_id_columns = [c.upper() for c in sql_table.columns]
 
-        # # Writing DataFrame to SQL DB.
-        # # Check rows count before insert.
-        # before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
-        # # Inserting DF to SQL.
-        # for row in df.itertuples(name=None):
-        #     if row[1] in sql_table_id_columns[id_fields[0]].values:
-        #         df = df.drop(row[0])
-        #         print(f'Table "{sql_table_to}" already exist key "{row[1]}"!')
-        # df.to_sql(sql_table_to, conn, if_exists='append', index=False, chunksize=500)
-        # # Check rows count after insert.
-        # after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
-        # # Calculating and output inserted rows quantity.
-        # inserted_rows: int = after_ins_rows_count[0] - before_ins_rows_count[0]
-        # print(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
+        # Writing DataFrame to SQL DB.
+        # Check rows count before insert.
+        before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
+        # Inserting DF to SQL.
+        for row in df.itertuples(name=None):
+            if row[1] in sql_table_id_columns:
+                df = df.drop(row[0])
+                print(f'Table "{sql_table_to}" already exist key "{row[1]}"!')
+        df.to_sql(sql_table_to, conn, if_exists='append', index=False, chunksize=500)
+        # Check rows count after insert.
+        after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
+        # Calculating and output inserted rows quantity.
+        inserted_rows: int = after_ins_rows_count[0] - before_ins_rows_count[0]
+        print(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
     except sqlalchemy.exc.ProgrammingError as pe:
         print(pe)
     except configparser.NoSectionError as nse:
