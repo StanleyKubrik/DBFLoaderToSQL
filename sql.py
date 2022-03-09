@@ -62,7 +62,8 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         # Pad ID fields with spaces to 9 chars.
         sql_table = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
         # sql_table_id_columns = [c.upper() for c in sql_table.columns]
-        # [print(row[1]) for row in df.itertuples(name=None)]
+        [print(row[1]) for row in df.itertuples(name=None) if row[1] in sql_table['IDDocument']]
+        sql_table.filter()  # !!!
 
         # Create a list with ID fields.
         id_fields = []
@@ -76,7 +77,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         #     if col in id_fields:  # Check if fields is ID.
         #         for v in df[col].values:
         #             df = df.replace({v: pad_field_with_spaces(v)})
-        print(id_fields)
+        # print(id_fields)
 
         # # Writing DataFrame to SQL DB.
         # # Check rows count before insert.
