@@ -50,7 +50,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         dbf = Dbf5(dbf_file_from, codec='1251')  # Initialization Dbf5 object.
         dbf_df = dbf.to_dataframe()  # Create simpledbf DataFrame.
         df = pd.DataFrame(dbf_df)  # Converting simpledbf DF to pandas DF.
-        df = df.fillna('NULL')
+        # df = df.fillna('NULL')
 
         # Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in config-file.
         for col in df.columns:
@@ -67,7 +67,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
                 value = cfg_field_dict.get(field[0].lower())
                 id_fields.append(value.upper())
 
-        # # Appending spaces to each value in the specified column.
+        # Appending spaces to each value in the specified column.
         for col in df.columns:
             if col in id_fields:  # Check if fields is ID.
                 for v in df[col].values:
