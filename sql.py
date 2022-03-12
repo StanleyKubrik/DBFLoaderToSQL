@@ -9,7 +9,7 @@ CONFIG_PATH = 'settings_Petrykivka.ini'
 cfg = Config(CONFIG_PATH)
 
 
-def connector():
+def connector() -> sqlalchemy.engine:
     driver = 'ODBC Driver 17 for SQL Server'
     server = 'powerbivm1.dpst.kola'
     port = 1433
@@ -50,9 +50,11 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         dbf = Dbf5(dbf_file_from, codec='1251')  # Initialization Dbf5 object.
         dbf_df = dbf.to_dataframe()  # Create simpledbf DataFrame.
         df = pd.DataFrame(dbf_df)  # Converting simpledbf DF to pandas DF.
-        # df = df.fillna('NULL')
+        sql_table = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
 
         # Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in config-file.
+        print("Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in "
+              "config-file...")
         for col in df.columns:
             if cfg_field_dict.keys().__contains__(col.lower()):
                 df = df.rename(columns={f'{col}': f'{cfg_field_dict.get(col.lower())}'})
@@ -61,27 +63,30 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
 
         # Pad ID fields with spaces to 9 chars.
         # Create a list with ID fields.
+        print('Create a list with ID fields...')
         id_fields = []
         for field in dbf.fields:
             if field[1] == 'C' and field[2] == 9 and cfg.has_option(dbf_file_from.split('.')[0], field[0]):
                 value = cfg_field_dict.get(field[0].lower())
-                id_fields.append(value.upper())
+                id_fields.append(value)
 
         # Appending spaces to each value in the specified column.
+        print('Appending spaces to each value in the specified column...')
         for col in df.columns:
             if col in id_fields:  # Check if fields is ID.
                 for v in df[col].values:
                     df = df.replace({v: pad_field_with_spaces(v)})
-
-        sql_table = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
-        sql_table_id_columns = [c.upper() for c in sql_table.columns]
+        # for col in df.columns:
+        #     fields_length = [len(str(v)) for v in df[col]]
+        #     max_length = max(fields_length)
+        #     print(max_length)
 
         # Writing DataFrame to SQL DB.
         # Check rows count before insert.
         before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Inserting DF to SQL.
         for row in df.itertuples(name=None):
-            if row[1] in sql_table_id_columns:
+            if row[1] in sql_table[id_fields[0]].values:
                 df = df.drop(row[0])
                 print(f'Table "{sql_table_to}" already exist key "{row[1]}"!')
         df.to_sql(sql_table_to, conn, if_exists='append', index=False, chunksize=500)
