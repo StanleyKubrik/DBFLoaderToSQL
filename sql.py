@@ -3,13 +3,13 @@ from config import *
 import sqlalchemy
 import keyring
 import pandas as pd
-import time
+# from interface import MainFrame
 
 CONFIG_PATH = 'settings_Petrykivka.ini'
 cfg = Config(CONFIG_PATH)
 
 
-def connector() -> sqlalchemy.engine:
+def connector():
     driver = 'ODBC Driver 17 for SQL Server'
     server = 'powerbivm1.dpst.kola'
     port = 1433
@@ -29,19 +29,6 @@ def connector() -> sqlalchemy.engine:
         return engine
 
 
-def get_table_fields_name(table_name: str, db_name='') -> pd.read_sql_query:
-    try:
-        pd_query = pd.read_sql_query("SELECT COLUMN_NAME "
-                                     "FROM INFORMATION_SCHEMA.COLUMNS "
-                                     f"WHERE TABLE_NAME = N'{table_name}'",
-                                     connector())
-        if pd_query.empty:
-            raise NameError('EmptyDataFrame')
-        return pd_query.values.tolist()
-    except NameError as ne:
-        return f'ERROR: {ne}'
-
-
 def insert_into_sql_table_from_dbf(dbf_file_from: str):
     try:
         sql_table_to = get_sql_table_name_for_dbf(dbf_file_from)
@@ -51,10 +38,13 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         dbf_df = dbf.to_dataframe()  # Create simpledbf DataFrame.
         df = pd.DataFrame(dbf_df)  # Converting simpledbf DF to pandas DF.
         sql_table = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
+        # frame = MainFrame(None)
 
         # Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in config-file.
         print("Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in "
               "config-file...")
+        # frame.setStatusBar("Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't "
+        #                    "exist in config-file...")
         for col in df.columns:
             if cfg_field_dict.keys().__contains__(col.lower()):
                 df = df.rename(columns={f'{col}': f'{cfg_field_dict.get(col.lower())}'})
@@ -64,6 +54,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         # Pad ID fields with spaces to 9 chars.
         # Create a list with ID fields.
         print('Create a list with ID fields...')
+        # frame.setStatusBar('Create a list with ID fields...')
         id_fields = []
         for field in dbf.fields:
             if field[1] == 'C' and field[2] == 9 and cfg.has_option(dbf_file_from.split('.')[0], field[0]):
@@ -76,25 +67,27 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
             if col in id_fields:  # Check if fields is ID.
                 for v in df[col].values:
                     df = df.replace({v: pad_field_with_spaces(v)})
-        # for col in df.columns:
-        #     fields_length = [len(str(v)) for v in df[col]]
-        #     max_length = max(fields_length)
-        #     print(max_length)
 
         # Writing DataFrame to SQL DB.
+        print('Writing DataFrame to SQL DB...')
+        # frame.setStatusBar('Writing DataFrame to SQL DB...')
         # Check rows count before insert.
         before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Inserting DF to SQL.
+        dropped_rows = 0
         for row in df.itertuples(name=None):
             if row[1] in sql_table[id_fields[0]].values:
                 df = df.drop(row[0])
-                print(f'Table "{sql_table_to}" already exist key "{row[1]}"!')
-        df.to_sql(sql_table_to, conn, if_exists='append', index=False, chunksize=500)
+                dropped_rows += 1
+        print(f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
+        # frame.setStatusBar(f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
+        df.to_sql(sql_table_to, conn, if_exists='append', index=False)  # , chunksize=500)
         # Check rows count after insert.
         after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Calculating and output inserted rows quantity.
         inserted_rows: int = after_ins_rows_count[0] - before_ins_rows_count[0]
         print(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
+        # frame.setStatusBar(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
     except sqlalchemy.exc.ProgrammingError as pe:
         print(pe)
     except configparser.NoSectionError as nse:
@@ -128,3 +121,15 @@ def get_sql_table_name_for_dbf(dbf_file_name: str):
         return 'RA_' + cfg.get_setting('Registers', section)
     elif dbf_file_name.startswith('RM'):
         return 'RM_' + cfg.get_setting('Registers', section)
+
+# def get_table_fields_name(table_name: str, db_name='') -> pd.read_sql_query:
+#     try:
+#         pd_query = pd.read_sql_query("SELECT COLUMN_NAME "
+#                                      "FROM INFORMATION_SCHEMA.COLUMNS "
+#                                      f"WHERE TABLE_NAME = N'{table_name}'",
+#                                      connector())
+#         if pd_query.empty:
+#             raise NameError('EmptyDataFrame')
+#         return pd_query.values.tolist()
+#     except NameError as ne:
+#         return f'ERROR: {ne}'
