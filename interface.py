@@ -1,20 +1,7 @@
-# -*- coding: utf-8 -*-
-
-###########################################################################
-## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
-## http://www.wxformbuilder.org/
-##
-## PLEASE DO *NOT* EDIT THIS FILE!
-###########################################################################
-
 import wx
 import wx.xrc
 from sql import insert_into_sql_table_from_dbf
 
-
-###########################################################################
-## Class MainFrame
-###########################################################################
 
 class MainFrame(wx.Frame):
 
@@ -109,4 +96,4 @@ class MainFrame(wx.Frame):
         self.Destroy()
 
     # def outInConsole(self, message):
-
+        

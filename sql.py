@@ -3,7 +3,6 @@ from config import *
 import sqlalchemy
 import keyring
 import pandas as pd
-# from interface import MainFrame
 
 CONFIG_PATH = 'settings_Petrykivka.ini'
 cfg = Config(CONFIG_PATH)
@@ -30,6 +29,7 @@ def connector():
 
 
 def insert_into_sql_table_from_dbf(dbf_file_from: str):
+    from interface import MainFrame
     try:
         sql_table_to = get_sql_table_name_for_dbf(dbf_file_from)
         cfg_field_dict = cfg.get_dict_from_dbf(dbf_file_from)
@@ -43,8 +43,6 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         # Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in config-file.
         print("Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in "
               "config-file...")
-        # frame.setStatusBar("Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't "
-        #                    "exist in config-file...")
         for col in df.columns:
             if cfg_field_dict.keys().__contains__(col.lower()):
                 df = df.rename(columns={f'{col}': f'{cfg_field_dict.get(col.lower())}'})
@@ -54,7 +52,6 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         # Pad ID fields with spaces to 9 chars.
         # Create a list with ID fields.
         print('Create a list with ID fields...')
-        # frame.setStatusBar('Create a list with ID fields...')
         id_fields = []
         for field in dbf.fields:
             if field[1] == 'C' and field[2] == 9 and cfg.has_option(dbf_file_from.split('.')[0], field[0]):
@@ -70,7 +67,6 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
 
         # Writing DataFrame to SQL DB.
         print('Writing DataFrame to SQL DB...')
-        # frame.setStatusBar('Writing DataFrame to SQL DB...')
         # Check rows count before insert.
         before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Inserting DF to SQL.
@@ -87,7 +83,6 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         # Calculating and output inserted rows quantity.
         inserted_rows: int = after_ins_rows_count[0] - before_ins_rows_count[0]
         print(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
-        # frame.setStatusBar(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
     except sqlalchemy.exc.ProgrammingError as pe:
         print(pe)
     except configparser.NoSectionError as nse:
