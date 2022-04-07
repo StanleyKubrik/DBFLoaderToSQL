@@ -1,7 +1,20 @@
+# -*- coding: utf-8 -*-
+
+###########################################################################
+## Python code generated with wxFormBuilder (version 3.10.1-0-g8feb16b3)
+## http://www.wxformbuilder.org/
+##
+## PLEASE DO *NOT* EDIT THIS FILE!
+###########################################################################
+
 import wx
 import wx.xrc
 from sql import insert_into_sql_table_from_dbf
 
+
+###########################################################################
+## Class MainFrame
+###########################################################################
 
 class MainFrame(wx.Frame):
 
@@ -88,18 +101,12 @@ class MainFrame(wx.Frame):
     # Virtual event handlers, override them in your derived class
     def onUpload(self, event):
         event.Skip()
-        try:
-            dbf_file = self.main_file_select.GetPath()
-            if not dbf_file:
-                raise FileExistsError
-            insert_into_sql_table_from_dbf(dbf_file.split('\\')[-1])
-        except FileExistsError:
-            print('Please choose DBF-file!')
-            self.outInConsole('Please choose DBF-file!')
+        dbf_file = self.main_file_select.GetPath()
+        insert_into_sql_table_from_dbf(dbf_file.split('\\')[-1])
 
     def onClose(self, event):
         event.Skip()
         self.Destroy()
 
-    def outInConsole(self, message):
-        self.m_textCtrl1.AppendText(message + '\n')
+    # def outInConsole(self, message):
+
