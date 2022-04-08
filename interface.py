@@ -88,12 +88,18 @@ class MainFrame(wx.Frame):
     # Virtual event handlers, override them in your derived class
     def onUpload(self, event):
         event.Skip()
-        dbf_file = self.main_file_select.GetPath()
-        insert_into_sql_table_from_dbf(dbf_file.split('\\')[-1])
+        try:
+            dbf_file = self.main_file_select.GetPath()
+            if not dbf_file:
+                raise FileExistsError
+            insert_into_sql_table_from_dbf(dbf_file.split('\\')[-1])
+        except FileExistsError:
+            print('Please choose DBF-file!')
+            self.outInConsole('Please choose DBF-file!')
 
     def onClose(self, event):
         event.Skip()
         self.Destroy()
 
-    # def outInConsole(self, message):
-        
+    def outInConsole(self, message):
+        self.m_textCtrl1.AppendText(message + '\n')

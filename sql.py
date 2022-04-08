@@ -9,6 +9,8 @@ cfg = Config(CONFIG_PATH)
 
 
 def connector():
+    from interface import MainFrame
+    frame = MainFrame(None)
     driver = 'ODBC Driver 17 for SQL Server'
     server = 'powerbivm1.dpst.kola'
     port = 1433
@@ -16,6 +18,8 @@ def connector():
     username = 'sa'
     password = keyring.get_password('SQL', username)
     print(f'Connecting to SQL DB {database}...')
+    # frame.outInConsole(f'Connecting to SQL DB {database}...')
+    frame.outInConsole('test')
     try:
         engine = sqlalchemy.create_engine(f'mssql+pyodbc://{username}:{password}@{server}'
                                           f':{port}/{database}'
@@ -23,8 +27,10 @@ def connector():
         engine.connect()
     except sqlalchemy.exc.InterfaceError as e:
         print(f"Can't connection to DB {database}: " + str(e))
+        frame.outInConsole(f"Can't connection to DB {database}: " + str(e))
     else:
         print(f'Connected to SQL DB {database}!')
+        frame.outInConsole(f'Connected to SQL DB {database}!')
         return engine
 
 
@@ -38,11 +44,13 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         dbf_df = dbf.to_dataframe()  # Create simpledbf DataFrame.
         df = pd.DataFrame(dbf_df)  # Converting simpledbf DF to pandas DF.
         sql_table = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
-        # frame = MainFrame(None)
+        frame = MainFrame(None)
 
         # Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in config-file.
         print("Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in "
               "config-file...")
+        frame.outInConsole("Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't "
+                           "exist in config-file...")
         for col in df.columns:
             if cfg_field_dict.keys().__contains__(col.lower()):
                 df = df.rename(columns={f'{col}': f'{cfg_field_dict.get(col.lower())}'})
@@ -52,6 +60,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         # Pad ID fields with spaces to 9 chars.
         # Create a list with ID fields.
         print('Create a list with ID fields...')
+        frame.outInConsole('Create a list with ID fields...')
         id_fields = []
         for field in dbf.fields:
             if field[1] == 'C' and field[2] == 9 and cfg.has_option(dbf_file_from.split('.')[0], field[0]):
@@ -60,6 +69,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
 
         # Appending spaces to each value in the specified column.
         print('Appending spaces to each value in the specified column...')
+        frame.outInConsole('Appending spaces to each value in the specified column...')
         for col in df.columns:
             if col in id_fields:  # Check if fields is ID.
                 for v in df[col].values:
@@ -67,6 +77,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
 
         # Writing DataFrame to SQL DB.
         print('Writing DataFrame to SQL DB...')
+        frame.outInConsole('Writing DataFrame to SQL DB...')
         # Check rows count before insert.
         before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Inserting DF to SQL.
@@ -76,6 +87,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
                 df = df.drop(row[0])
                 dropped_rows += 1
         print(f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
+        frame.outInConsole(f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
         # frame.setStatusBar(f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
         df.to_sql(sql_table_to, conn, if_exists='append', index=False)  # , chunksize=500)
         # Check rows count after insert.
@@ -83,6 +95,7 @@ def insert_into_sql_table_from_dbf(dbf_file_from: str):
         # Calculating and output inserted rows quantity.
         inserted_rows: int = after_ins_rows_count[0] - before_ins_rows_count[0]
         print(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
+        frame.outInConsole(f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
     except sqlalchemy.exc.ProgrammingError as pe:
         print(pe)
     except configparser.NoSectionError as nse:
