@@ -3,7 +3,6 @@ from config import *
 import sqlalchemy
 import keyring
 import pandas as pd
-# from interface import MainFrame
 
 CONFIG_PATH = 'settings_Petrykivka.ini'
 cfg = Config(CONFIG_PATH)
