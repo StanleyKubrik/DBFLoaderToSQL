@@ -82,7 +82,7 @@ def load_into_sql_table_from_dbf(dbf_file_from: str):
                 df = df.drop(row[0])
                 dropped_rows += 1
         print(datetime.now().strftime("%H:%M:%S"), f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
-        df.to_sql(sql_table_to, conn, if_exists='append', index=False, chunksize=1000)
+        df.to_sql(sql_table_to, conn, if_exists='append', index=False)
         # Check rows count after insert.
         after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Calculating and output inserted rows quantity.
