@@ -20,9 +20,8 @@ def connector():
     password = keyring.get_password('SQL', username)
     print(f'Connecting to SQL DB {database}...')
     try:
-        engine = sqlalchemy.create_engine(f'mssql+pyodbc://{username}:{password}@{server}'
-                                          f':{port}/{database}'
-                                          f'?driver={driver}')
+        connection_uri = f'mssql+pyodbc://{username}:{password}@{server}:{port}/{database}?driver={driver}'
+        engine = sqlalchemy.create_engine(connection_uri, fast_executemany=True)
         engine.connect()
     except sqlalchemy.exc.InterfaceError as e:
         print(f"Can't connection to DB {database}: " + str(e))
