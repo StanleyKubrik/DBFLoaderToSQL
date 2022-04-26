@@ -46,7 +46,8 @@ def load_into_sql_table_from_dbf(dbf_file_from: str):
         sql_table = pd.read_sql_table(sql_table_to, conn)  # , columns=id_fields)
 
         # Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in config-file.
-        print(datetime.now().strftime("%H:%M:%S"), "Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in "
+        print(datetime.now().strftime("%H:%M:%S"), '|',
+              "Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in "
               "config-file...")
         for col in df.columns:
             if cfg_field_dict.keys().__contains__(col.lower()):
@@ -56,7 +57,7 @@ def load_into_sql_table_from_dbf(dbf_file_from: str):
 
         # Pad ID fields with spaces to 9 chars.
         # Create a list with ID fields.
-        print(datetime.now().strftime("%H:%M:%S"), 'Create a list with ID fields...')
+        print(datetime.now().strftime("%H:%M:%S"), '|', 'Create a list with ID fields...')
         id_fields = []
         for field in dbf.fields:
             if field[1] == 'C' and field[2] == 9 and cfg.has_option(dbf_file_from.split('.')[0], field[0]):
@@ -64,30 +65,32 @@ def load_into_sql_table_from_dbf(dbf_file_from: str):
                 id_fields.append(value)
 
         # Appending spaces to each value in the specified column.
-        print(datetime.now().strftime("%H:%M:%S"), 'Appending spaces to each value in the specified column...')
+        print(datetime.now().strftime("%H:%M:%S"), '|', 'Appending spaces to each value in the specified column...')
         vfunc = np.vectorize(fill_field_with_spaces)  # Map array.
         for col in id_fields:
             df[col] = vfunc(df[col].values)  # Assign mapped array to dataframe.
             # for v in df[col].values:
             #     df = df.replace({v: fill_field_with_spaces(v)})
 
-        # Writing DataFrame to SQL DB.
-        print(datetime.now().strftime("%H:%M:%S"), 'Writing DataFrame to SQL DB...')
         # Check rows count before insert.
         before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
-        # Inserting DF to SQL.
+        print(datetime.now().strftime("%H:%M:%S"), '|', 'Looking for exist keys...')
+        # Looking for exist keys.
         dropped_rows = 0
         for row in df.itertuples(name=None):
             if row[1] in sql_table[id_fields[0]].values:
                 df = df.drop(row[0])
                 dropped_rows += 1
-        print(datetime.now().strftime("%H:%M:%S"), f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
+        print(datetime.now().strftime("%H:%M:%S"), '|', f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
+        # Writing DataFrame to SQL DB.
+        print(datetime.now().strftime("%H:%M:%S"), '|', 'Writing DataFrame to SQL DB...')
         df.to_sql(sql_table_to, conn, if_exists='append', index=False)
         # Check rows count after insert.
         after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', conn).values[0]
         # Calculating and output inserted rows quantity.
         inserted_rows: int = after_ins_rows_count[0] - before_ins_rows_count[0]
-        print(datetime.now().strftime("%H:%M:%S"), f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
+        print(datetime.now().strftime("%H:%M:%S"), '|',
+              f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".')
     except sqlalchemy.exc.ProgrammingError as pe:
         print(pe)
     except configparser.NoSectionError as nse:
