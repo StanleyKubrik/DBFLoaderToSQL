@@ -57,9 +57,9 @@ class MainFrame(wx.Frame):
 
         gbSizer2.Add(self.main_file_select, wx.GBPosition(0, 1), wx.GBSpan(1, 4), wx.ALL | wx.EXPAND, 5)
 
-        self.m_textCtrl1 = wx.TextCtrl(self.first_page, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,
+        self.textConsole = wx.TextCtrl(self.first_page, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,
                                        wx.TE_MULTILINE | wx.TE_READONLY)
-        gbSizer2.Add(self.m_textCtrl1, wx.GBPosition(2, 0), wx.GBSpan(1, 5), wx.ALL | wx.EXPAND, 5)
+        gbSizer2.Add(self.textConsole, wx.GBPosition(2, 0), wx.GBSpan(1, 5), wx.ALL | wx.EXPAND, 5)
 
         self.uploadButton = wx.ToggleButton(self.first_page, wx.ID_ANY, u"Upload", wx.DefaultPosition, wx.DefaultSize,
                                             0)
@@ -115,4 +115,4 @@ class MainFrame(wx.Frame):
         self.Destroy()
 
     def outInConsole(self, message):
-        self.m_textCtrl1.AppendText(message + '\n')
+        self.textConsole.AppendText(message + '\n')
