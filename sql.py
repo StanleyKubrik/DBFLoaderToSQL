@@ -7,8 +7,10 @@ import numpy as np
 from datetime import datetime
 
 
-CONFIG_PATH = 'settings_Petrykivka.ini'
-cfg = Config(CONFIG_PATH)
+EXCHANGE_CONFIG_PATH = 'settings_Petrykivka.ini'
+exchange_cfg = Config(EXCHANGE_CONFIG_PATH)
+APP_CONFIG_PATH = 'config.ini'
+app_config = Config(APP_CONFIG_PATH)
 
 
 def connector():
@@ -38,7 +40,7 @@ def load_into_sql_table_from_dbf(dbf_file_from: str):
     from interface import MainFrame
     try:
         sql_table_to = get_sql_table_name_for_dbf(dbf_file_from)
-        cfg_field_dict = cfg.get_dict_from_dbf(dbf_file_from)
+        cfg_field_dict = exchange_cfg.get_dict_from_dbf(dbf_file_from)
         conn = connector()  # Initialization connector object.
         dbf = Dbf5(dbf_file_from, codec='1251')  # Initialization Dbf5 object.
         dbf_df = dbf.to_dataframe()  # Create simpledbf DataFrame.
@@ -60,7 +62,7 @@ def load_into_sql_table_from_dbf(dbf_file_from: str):
         print(datetime.now().strftime("%H:%M:%S"), '|', 'Create a list with ID fields...')
         id_fields = []
         for field in dbf.fields:
-            if field[1] == 'C' and field[2] == 9 and cfg.has_option(dbf_file_from.split('.')[0], field[0]):
+            if field[1] == 'C' and field[2] == 9 and exchange_cfg.has_option(dbf_file_from.split('.')[0], field[0]):
                 value = cfg_field_dict.get(field[0].lower())
                 id_fields.append(value)
 
@@ -128,15 +130,15 @@ def get_sql_table_name_for_dbf(dbf_file_name: str):
     section_list = re.findall('\d+', dbf_file_name.split('.')[0])
     section = ''.join(section_list)
     if dbf_file_name.startswith('DH'):
-        return 'DH_' + cfg.get_setting('Documents', section)
+        return 'DH_' + exchange_cfg.get_setting('Documents', section)
     elif dbf_file_name.startswith('DT'):
-        return 'DT_' + cfg.get_setting('Documents', section)
+        return 'DT_' + exchange_cfg.get_setting('Documents', section)
     elif dbf_file_name.startswith('SC'):
-        return cfg.get_setting('References', section)
+        return exchange_cfg.get_setting('References', section)
     elif dbf_file_name.startswith('RA'):
-        return 'RA_' + cfg.get_setting('Registers', section)
+        return 'RA_' + exchange_cfg.get_setting('Registers', section)
     elif dbf_file_name.startswith('RM'):
-        return 'RM_' + cfg.get_setting('Registers', section)
+        return 'RM_' + exchange_cfg.get_setting('Registers', section)
 
 # def get_table_fields_name(table_name: str, db_name='') -> pd.read_sql_query:
 #     try:
