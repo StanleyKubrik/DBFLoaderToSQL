@@ -14,12 +14,12 @@ app_config = Config(APP_CONFIG_PATH)
 
 
 def connector():
-    driver = 'ODBC Driver 17 for SQL Server'
-    server = 'powerbivm1.dpst.kola'
-    port = 1433
-    database = 'petrykivka_test'
-    username = 'sa'
-    password = keyring.get_password('SQL', username)
+    driver = app_config.get_setting('SQL', 'driver') or 'ODBC Driver 17 for SQL Server'
+    server = app_config.get_setting('SQL', 'server') or 'powerbivm1.dpst.kola'
+    port = app_config.get_setting('SQL', 'port') or 1433
+    database = app_config.get_setting('SQL', 'database') or 'petrykivka_test'
+    username = app_config.get_setting('SQL', 'username') or 'sa'
+    password = app_config.get_setting('SQL', 'password') or keyring.get_password('SQL', username)
     print(f'Connecting to SQL DB {database}...')
     try:
         connection_uri = f'mssql+pyodbc://{username}:{password}@{server}:{port}/{database}?driver={driver}'

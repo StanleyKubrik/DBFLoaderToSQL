@@ -16,6 +16,9 @@ class Config:
     def get_section(self, section):
         return self.configuration.options(section)
 
+    def set_setting(self, section, setting, value):
+        self.configuration.set(section=section, option=setting, value=value)
+
     def has_section(self, name):
         return self.configuration.has_section(name)
 
