@@ -14,7 +14,7 @@ app_config = Config(APP_CONFIG_PATH)
 
 
 def connector():
-    driver = app_config.get_setting('SQL', 'driver')  # or 'ODBC Driver 17 for SQL Server'
+    driver = 'ODBC Driver 17 for SQL Server'
     server = app_config.get_setting('SQL', 'server')  # or 'powerbivm1.dpst.kola'
     port = app_config.get_setting('SQL', 'port')  # or 1433
     database = app_config.get_setting('SQL', 'database')  # or 'petrykivka_test'
@@ -80,6 +80,9 @@ def load_into_sql_table_from_dbf(dbf_file_from: str):
         # Looking for exist keys.
         dropped_rows = 0
         for row in df.itertuples(name=None):
+            if sql_table.empty:
+                print(datetime.now().strftime("%H:%M:%S"), '|', 'Destination SQL table is empty!')
+                break
             if row[1] in sql_table[id_fields[0]].values:
                 df = df.drop(row[0])
                 dropped_rows += 1

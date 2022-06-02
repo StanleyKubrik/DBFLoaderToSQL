@@ -1,7 +1,8 @@
 from interface import MainFrame
-import wx
+import wx, wx.grid as grd
 from sql import load_into_sql_table_from_dbf, fill_field_with_spaces
 import keyring
+from ObjectListView import ObjectListView, ColumnDefn
 
 DBF = 'RA7683.DBF'
 
