@@ -9,7 +9,7 @@
 
 import wx
 import wx.xrc
-from sql import load_into_sql_table_from_dbf
+from sql import SQL
 
 
 ###########################################################################
@@ -181,7 +181,7 @@ class MainFrame(wx.Frame):
             dbf_file = self.filepicker_file_select.GetPath()
             if not dbf_file:
                 raise FileExistsError
-            load_into_sql_table_from_dbf(dbf_file.split('\\')[-1])
+            SQL().load_into_sql_table_from_dbf(dbf_file.split('\\')[-1])
         except FileExistsError:
             print('ERROR: Please choose DBF-file!')
             self.outInConsole('ERROR: Please choose DBF-file!')
