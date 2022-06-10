@@ -1,9 +1,5 @@
-from interface import MainFrame
-import wx, wx.grid as grd
-# from sql import load_into_sql_table_from_dbf, fill_field_with_spaces
-import keyring
-
-DBF = 'RA7683.DBF'
+from gui import MainFrame
+import wx
 
 
 if __name__ == '__main__':
@@ -13,4 +9,3 @@ if __name__ == '__main__':
     frame.Show()
 
     app.MainLoop()
-    # load_into_sql_table_from_dbf(DBF)
