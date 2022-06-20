@@ -55,11 +55,10 @@ class SQL:
             dbf_file_from = dbf_file_from_path.split('\\')[-1]
             sql_table_to = self.get_sql_table_name_for_dbf(dbf_file_from)
             cfg_field_dict = exchange_cfg.get_dict_from_dbf(dbf_file_from)
-            # conn = self.connector()  # Initialization connector object.
-            dbf = Dbf5(dbf_file_from_path, codec='1251')  # Initialization Dbf5 object.
+            dbf = Dbf5(dbf_file_from_path, codec='1251')  # Init Dbf5 object.
             dbf_df = dbf.to_dataframe()  # Create simpledbf DataFrame.
             df = pd.DataFrame(dbf_df)  # Converting simpledbf DF to pandas DF.
-            sql_table = pd.read_sql_table(sql_table_to, self.engine)  # , columns=id_fields)
+            sql_table = pd.read_sql_table(sql_table_to, self.engine)
             print(datetime.now().strftime("%H:%M:%S"), '|', f'Start uploading {dbf_file_from}...')
 
             # Renaming fields in DataFrame(DBF) according to SQL table and delete fields that don't exist in config.
@@ -89,8 +88,6 @@ class SQL:
                 # for v in df[col].values:
                 #     df = df.replace({v: fill_field_with_spaces(v)})
 
-            # Check rows count before insert.
-            before_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', self.engine).values[0]
             print(datetime.now().strftime("%H:%M:%S"), '|', 'Looking for exist keys...')
             # Looking for exist keys.
             dropped_rows = 0
@@ -103,13 +100,10 @@ class SQL:
                   f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
             # Writing DataFrame to SQL DB.
             print(datetime.now().strftime("%H:%M:%S"), '|', 'Writing DataFrame to SQL DB...')
-            df.to_sql(sql_table_to, self.engine, if_exists='append', index=False)
-            # Check rows count after insert.
-            after_ins_rows_count = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', self.engine).values[0]
-            # Calculating and output inserted rows quantity.
-            inserted_rows: int = after_ins_rows_count[0] - before_ins_rows_count[0]
+            ins_rows = df.to_sql(sql_table_to, self.engine, if_exists='append', index=False)
+            # Output inserted rows quantity.
             print(datetime.now().strftime("%H:%M:%S"), '|',
-                  f'{inserted_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".'
+                  f'{ins_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".'
                   f'\n')
         except sqlalchemy.exc.ProgrammingError as pe:
             print(pe)

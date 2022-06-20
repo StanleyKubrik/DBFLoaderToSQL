@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
+    <width>703</width>
     <height>540</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>DBF Loader To SQL v1.0</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
@@ -86,9 +86,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>40</y>
+        <y>39</y>
         <width>691</width>
-        <height>200</height>
+        <height>201</height>
        </rect>
       </property>
       <property name="frameShape">
@@ -110,7 +110,7 @@
        <number>4</number>
       </property>
       <attribute name="horizontalHeaderVisible">
-       <bool>false</bool>
+       <bool>true</bool>
       </attribute>
       <attribute name="horizontalHeaderCascadingSectionResizes">
        <bool>false</bool>
@@ -213,7 +213,7 @@
         <height>511</height>
        </rect>
       </property>
-      <layout class="QFormLayout" name="formLayout">
+      <layout class="QFormLayout" name="config_column1">
        <property name="leftMargin">
         <number>5</number>
        </property>
@@ -221,44 +221,44 @@
         <number>5</number>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="lbl_server">
          <property name="text">
           <string>SQL server</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="lineedit_server"/>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="lbl_database">
          <property name="text">
           <string>Database</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="lineedit_database"/>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="lbl_username">
          <property name="text">
           <string>Username</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_3"/>
+        <widget class="QLineEdit" name="lineedit_username"/>
        </item>
        <item row="3" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="lbl_password">
          <property name="text">
           <string>Password</string>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="lineEdit_4">
+        <widget class="QLineEdit" name="lineedit_password">
          <property name="echoMode">
           <enum>QLineEdit::Password</enum>
          </property>
@@ -275,7 +275,7 @@
         <height>511</height>
        </rect>
       </property>
-      <layout class="QFormLayout" name="formLayout_2">
+      <layout class="QFormLayout" name="config_column2">
        <property name="leftMargin">
         <number>5</number>
        </property>
@@ -283,7 +283,7 @@
         <number>5</number>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_7">
+        <widget class="QLabel" name="lb_port">
          <property name="text">
           <string>Port</string>
          </property>
@@ -293,7 +293,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit_7">
+        <widget class="QLineEdit" name="lineedit_port">
          <property name="enabled">
           <bool>true</bool>
          </property>

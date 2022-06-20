@@ -1,11 +1,11 @@
-from gui import MainFrame
-import wx
+from gui import GUI
+from PyQt5 import QtWidgets
+import sys
 
 
 if __name__ == '__main__':
-    app = wx.App()
+    app = QtWidgets.QApplication(sys.argv)
+    ui = GUI()
+    ui.main_window.show()
+    sys.exit(app.exec_())
 
-    frame = MainFrame(None)
-    frame.Show()
-
-    app.MainLoop()
