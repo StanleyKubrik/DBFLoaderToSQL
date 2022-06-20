@@ -186,14 +186,14 @@
         <widget class="QLineEdit" name="lineedit_directory"/>
        </item>
        <item>
-        <widget class="QPushButton" name="btn_browse">
+        <widget class="QPushButton" name="btn_view_files">
          <property name="font">
           <font>
            <pointsize>10</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Browse</string>
+          <string>View files</string>
          </property>
         </widget>
        </item>
