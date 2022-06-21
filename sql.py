@@ -98,10 +98,15 @@ class SQL:
                         dropped_rows += 1
             print(datetime.now().strftime("%H:%M:%S"), '|',
                   f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
+            # Remember the number of rows before inserting.
+            before_insert_rows = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', self.engine).values[0]
             # Writing DataFrame to SQL DB.
             print(datetime.now().strftime("%H:%M:%S"), '|', 'Writing DataFrame to SQL DB...')
-            ins_rows = df.to_sql(sql_table_to, self.engine, if_exists='append', index=False)
+            df.to_sql(sql_table_to, self.engine, if_exists='append', index=False)
+            # Counting rows after inserting.
+            after_insert_rows = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', self.engine).values[0]
             # Output inserted rows quantity.
+            ins_rows: int = after_insert_rows[0] - before_insert_rows[0]
             print(datetime.now().strftime("%H:%M:%S"), '|',
                   f'{ins_rows} rows successfully inserted from DBF "{dbf_file_from}" to table "{sql_table_to}".'
                   f'\n')
