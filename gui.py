@@ -14,6 +14,8 @@ class GUI(Ui_MainWindow):
 
         self.btn_view_files.clicked.connect(self.view_files)
 
+        self.tbl_dbfs.insertRow(15)
+
         for row in range(self.tbl_dbfs.rowCount() + 1):
             item = QTableWidgetItem()
             item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
@@ -28,12 +30,17 @@ class GUI(Ui_MainWindow):
 
     def view_files(self):
         try:
-            dbf_file_list = [f for f in listdir(self.lineedit_directory.text()) if f.endswith('.DBF')]
+            # dbf_file_list = [f for f in listdir(self.lineedit_directory.text()) if f.endswith('.DBF')]
+            test_list = ['test1', 'test2', 'test3', 'test4', 'test5']
+            row = 0
+            for i in test_list:
+                self.tbl_dbfs.setItem(row, 1, QTableWidgetItem(f'{i}'))
+                print(i)
             # for file in dbf_file_list:
             #     for row in range(len(dbf_file_list) + 1):
             #         item = QTableWidgetItem()
             #         item.setText(f'{file}')
-            #         self.tbl_dbfs.setItem(row, 0, item)
+            #         self.tbl_dbfs.setItem(row, 1, item)
         except WindowsError:
             self.warning_msg('ERROR', 'Select a directory first!')
 

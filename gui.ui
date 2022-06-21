@@ -107,7 +107,7 @@
        <number>0</number>
       </property>
       <property name="columnCount">
-       <number>5</number>
+       <number>4</number>
       </property>
       <attribute name="horizontalHeaderVisible">
        <bool>true</bool>
@@ -133,11 +133,6 @@
       <attribute name="verticalHeaderShowSortIndicator" stdset="0">
        <bool>false</bool>
       </attribute>
-      <column>
-       <property name="text">
-        <string>✓</string>
-       </property>
-      </column>
       <column>
        <property name="text">
         <string>Filename</string>
