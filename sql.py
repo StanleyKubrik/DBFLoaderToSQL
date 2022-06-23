@@ -55,9 +55,17 @@ class SQL:
             dbf_file_from = dbf_file_from_path.split('\\')[-1]
             sql_table_to = self.get_sql_table_name_for_dbf(dbf_file_from)
             cfg_field_dict = exchange_cfg.get_dict_from_dbf(dbf_file_from)
-            dbf = Dbf5(dbf_file_from_path, codec='1251')  # Init Dbf5 object.
-            dbf_df = dbf.to_dataframe()  # Create simpledbf DataFrame.
-            df = pd.DataFrame(dbf_df)  # Converting simpledbf DF to pandas DF.
+            # Init Dbf5 object.
+            print(datetime.now().strftime("%H:%M:%S"), '|', f'Init Dbf5 object...')
+            dbf = Dbf5(dbf_file_from_path, codec='1251')
+            # Create simpledbf DataFrame.
+            print(datetime.now().strftime("%H:%M:%S"), '|', f'Create simpledbf DataFrame...')
+            dbf_df = dbf.to_dataframe()
+            # Converting simpledbf DF to Pandas DF.
+            print(datetime.now().strftime("%H:%M:%S"), '|', f'Converting simpledbf DF to Pandas DF...')
+            df = pd.DataFrame(dbf_df)
+            # Reading SQL table.
+            print(datetime.now().strftime("%H:%M:%S"), '|', f'Reading SQL table...')
             sql_table = pd.read_sql_table(sql_table_to, self.engine)
             print(datetime.now().strftime("%H:%M:%S"), '|', f'Start uploading {dbf_file_from}...')
 
@@ -74,9 +82,13 @@ class SQL:
             # Pad ID fields with spaces to 9 chars.
             # Create a list with ID fields.
             print(datetime.now().strftime("%H:%M:%S"), '|', 'Create a list with ID fields...')
-            id_fields = []
+            id_fields = []  # or (field[1] == 'C' and field[2] == 9)
+            if dbf_file_from == '1SJOURN.DBF':
+                section = 'Journal'
+            else:
+                section = dbf_file_from.split('.')[0]
             for field in dbf.fields:
-                if field[1] == 'C' and field[2] == 9 and exchange_cfg.has_option(dbf_file_from.split('.')[0], field[0]):
+                if field[1] == 'C' and field[2] == 9 and exchange_cfg.has_option(section, field[0]):
                     value = cfg_field_dict.get(field[0].lower())
                     id_fields.append(value)
 
@@ -99,12 +111,12 @@ class SQL:
             print(datetime.now().strftime("%H:%M:%S"), '|',
                   f'Table "{sql_table_to}" already exist {dropped_rows} keys!')
             # Remember the number of rows before inserting.
-            before_insert_rows = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', self.engine).values[0]
+            before_insert_rows = pd.read_sql_query(f'SELECT COUNT(*) FROM [{sql_table_to}]', self.engine).values[0]
             # Writing DataFrame to SQL DB.
             print(datetime.now().strftime("%H:%M:%S"), '|', 'Writing DataFrame to SQL DB...')
             df.to_sql(sql_table_to, self.engine, if_exists='append', index=False)
             # Counting rows after inserting.
-            after_insert_rows = pd.read_sql_query(f'SELECT COUNT(*) FROM {sql_table_to}', self.engine).values[0]
+            after_insert_rows = pd.read_sql_query(f'SELECT COUNT(*) FROM [{sql_table_to}]', self.engine).values[0]
             # Output inserted rows quantity.
             ins_rows: int = after_insert_rows[0] - before_insert_rows[0]
             print(datetime.now().strftime("%H:%M:%S"), '|',
@@ -146,7 +158,9 @@ class SQL:
 
         section_list = re.findall('\d+', dbf_file_name.split('.')[0])
         section = ''.join(section_list)
-        if dbf_file_name.startswith('DH'):
+        if dbf_file_name == '1SJOURN.DBF':
+            return '1SJOURN_test'
+        elif dbf_file_name.startswith('DH'):
             return 'DH_' + exchange_cfg.get_setting('Documents', section)
         elif dbf_file_name.startswith('DT'):
             return 'DT_' + exchange_cfg.get_setting('Documents', section)
@@ -156,3 +170,29 @@ class SQL:
             return 'RA_' + exchange_cfg.get_setting('Registers', section)
         elif dbf_file_name.startswith('RM'):
             return 'RM_' + exchange_cfg.get_setting('Registers', section)
+
+
+# def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
+#     """Converts an integer to a base36 string."""
+#     if not isinstance(number, int):
+#         raise TypeError('number must be an integer')
+#
+#     base36 = ''
+#     sign = ''
+#
+#     if number < 0:
+#         sign = '-'
+#         number = -number
+#
+#     if 0 <= number < len(alphabet):
+#         return sign + alphabet[number]
+#
+#     while number != 0:
+#         number, i = divmod(number, len(alphabet))
+#         base36 = alphabet[i] + base36
+#
+#     return sign + base36
+#
+#
+# def base36decode(number):
+#     return int(number, 36)
