@@ -9,6 +9,7 @@ class GUI(Ui_MainWindow):
         self.main_window = QMainWindow()
         self.setupUi(self.main_window)
 
+        # Make it possible to select a directory by double-clicking on the field.
         self.lineedit_directory.setPlaceholderText('Double-click for open explorer')
         self.lineedit_directory.selectionChanged.connect(self.browse_directory)
 
@@ -25,10 +26,17 @@ class GUI(Ui_MainWindow):
         self.btn_upload.clicked.connect(self.upload_data)
 
     def browse_directory(self):
+        """
+        Open explorer to select a directory.
+        """
+
         directory = QFileDialog.getExistingDirectory()
         self.lineedit_directory.setText(directory)
 
     def view_files(self):
+        """
+        Fills the table with DBFs for further selection and upload.
+        """
         try:
             # dbf_file_list = [f for f in listdir(self.lineedit_directory.text()) if f.endswith('.DBF')]
             test_list = ['test1', 'test2', 'test3', 'test4', 'test5']
@@ -45,7 +53,15 @@ class GUI(Ui_MainWindow):
             self.warning_msg('ERROR', 'Select a directory first!')
 
     def upload_data(self):
+        """
+        Uploads selected DBFs into SQL.
+        """
         pass
 
     def warning_msg(self, title, message):
+        """
+        Shows a warning message.
+        :param title: Title of the message box.
+        :param message: The main text of the message box.
+        """
         QMessageBox.warning(self.main_window, title, message)

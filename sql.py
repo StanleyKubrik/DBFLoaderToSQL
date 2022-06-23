@@ -159,7 +159,7 @@ class SQL:
         section_list = re.findall('\d+', dbf_file_name.split('.')[0])
         section = ''.join(section_list)
         if dbf_file_name == '1SJOURN.DBF':
-            return '1SJOURN_test'
+            return '1SJOURN'
         elif dbf_file_name.startswith('DH'):
             return 'DH_' + exchange_cfg.get_setting('Documents', section)
         elif dbf_file_name.startswith('DT'):
@@ -196,3 +196,8 @@ class SQL:
 #
 # def base36decode(number):
 #     return int(number, 36)
+#
+# def from_36_to_time(time_in_36):
+#     time_ms = int(time_in_36, 36)
+#     time = datetime.fromtimestamp(time_ms / 1000.0)
+#     return time.time()

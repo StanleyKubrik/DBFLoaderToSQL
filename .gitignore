@@ -1,1 +1,2 @@
-1SJOURN.DBF
+# Exclude DBF files from git.
+/DBF/
