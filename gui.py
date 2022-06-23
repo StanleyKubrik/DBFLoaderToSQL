@@ -17,12 +17,6 @@ class GUI(Ui_MainWindow):
 
         self.tbl_dbfs.insertRow(15)
 
-        for row in range(self.tbl_dbfs.rowCount() + 1):
-            item = QTableWidgetItem()
-            item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
-            item.setCheckState(Qt.CheckState.Unchecked)
-            self.tbl_dbfs.setItem(row, 0, item)
-
         self.btn_upload.clicked.connect(self.upload_data)
 
     def browse_directory(self):
@@ -33,22 +27,33 @@ class GUI(Ui_MainWindow):
         directory = QFileDialog.getExistingDirectory()
         self.lineedit_directory.setText(directory)
 
+    def set_checkable_cells(self, quantity):
+        for row in range(quantity):
+            item = QTableWidgetItem()
+            item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
+            item.setCheckState(Qt.CheckState.Unchecked)
+            self.tbl_dbfs.setItem(row, 0, item)
+
     def view_files(self):
         """
         Fills the table with DBFs for further selection and upload.
         """
         try:
-            # dbf_file_list = [f for f in listdir(self.lineedit_directory.text()) if f.endswith('.DBF')]
-            test_list = ['test1', 'test2', 'test3', 'test4', 'test5']
+            directory = self.lineedit_directory.text()
+            dbf_file_list = [f for f in listdir(directory) if f.lower().endswith('.dbf')]
+            # test_list = ['test1', 'test2', 'test3', 'test4', 'test5']
+            # row = 0
+            # for i in test_list:
+            #     self.tbl_dbfs.setItem(row, 0, QTableWidgetItem(f'{i}'))
+            #     row += 1
             row = 0
-            for i in test_list:
-                self.tbl_dbfs.setItem(row, 1, QTableWidgetItem(f'{i}'))
-                print(i)
-            # for file in dbf_file_list:
-            #     for row in range(len(dbf_file_list) + 1):
-            #         item = QTableWidgetItem()
-            #         item.setText(f'{file}')
-            #         self.tbl_dbfs.setItem(row, 1, item)
+            while row < len(dbf_file_list):
+                item = QTableWidgetItem()
+                item.setText(f'{dbf_file_list[row]}')
+                self.tbl_dbfs.setItem(row, 0, item)
+                row += 1
+
+            # self.set_checkable_cells(self.tbl_dbfs.rowCount())
         except WindowsError:
             self.warning_msg('ERROR', 'Select a directory first!')
 

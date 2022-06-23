@@ -47,7 +47,7 @@ class Ui_MainWindow(object):
         self.tbl_dbfs.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.tbl_dbfs.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.tbl_dbfs.setGridStyle(QtCore.Qt.SolidLine)
-        self.tbl_dbfs.setRowCount(0)
+        self.tbl_dbfs.setRowCount(5)
         self.tbl_dbfs.setColumnCount(4)
         self.tbl_dbfs.setObjectName("tbl_dbfs")
         item = QtWidgets.QTableWidgetItem()
