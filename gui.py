@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QTableWidgetI
 from PyQt5.QtCore import Qt
 from gui_qt import Ui_MainWindow
 from os import listdir
+from sql import SQL
 
 
 class GUI(Ui_MainWindow):
@@ -15,9 +16,10 @@ class GUI(Ui_MainWindow):
 
         self.btn_view_files.clicked.connect(self.view_files)
 
-        self.tbl_dbfs.insertRow(15)
-
         self.btn_upload.clicked.connect(self.upload_data)
+
+        # Init SQL-object for connect to DB.
+        self.sql = SQL()
 
     def browse_directory(self):
         """
@@ -26,13 +28,6 @@ class GUI(Ui_MainWindow):
 
         directory = QFileDialog.getExistingDirectory()
         self.lineedit_directory.setText(directory)
-
-    def set_checkable_cells(self, quantity):
-        for row in range(quantity):
-            item = QTableWidgetItem()
-            item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
-            item.setCheckState(Qt.CheckState.Unchecked)
-            self.tbl_dbfs.setItem(row, 0, item)
 
     def view_files(self):
         """
@@ -46,14 +41,15 @@ class GUI(Ui_MainWindow):
             # for i in test_list:
             #     self.tbl_dbfs.setItem(row, 0, QTableWidgetItem(f'{i}'))
             #     row += 1
+            self.tbl_dbfs.setRowCount(len(dbf_file_list))
             row = 0
             while row < len(dbf_file_list):
                 item = QTableWidgetItem()
                 item.setText(f'{dbf_file_list[row]}')
+                item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
+                item.setCheckState(Qt.CheckState.Unchecked)
                 self.tbl_dbfs.setItem(row, 0, item)
                 row += 1
-
-            # self.set_checkable_cells(self.tbl_dbfs.rowCount())
         except WindowsError:
             self.warning_msg('ERROR', 'Select a directory first!')
 
