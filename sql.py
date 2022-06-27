@@ -199,5 +199,11 @@ class SQL:
     #
     # def from_36_to_time(self, time_in_36):
     #     time_ms = int(time_in_36, 36)
-    #     time = datetime.fromtimestamp(time_ms / 1000.0)
-    #     return time.time()
+    #     millis = time_ms / 10
+    #     millis = int(millis)
+    #     seconds = (millis / 1000) % 60
+    #     seconds = int(seconds)
+    #     minutes = (millis / (1000 * 60)) % 60
+    #     minutes = int(minutes)
+    #     hours = (millis / (1000 * 60 * 60)) % 24
+    #     return "%02d:%02d:%02d" % (hours, minutes, seconds)
