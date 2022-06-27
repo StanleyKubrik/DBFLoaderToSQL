@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QMessageBox, QFileDialog, QTableWidgetI
 from PyQt5.QtCore import Qt
 from gui_qt import Ui_MainWindow
 from os import listdir
+import os
 from sql import SQL
 
 
@@ -18,8 +19,8 @@ class GUI(Ui_MainWindow):
 
         self.btn_upload.clicked.connect(self.upload_data)
 
-        # Init SQL-object for connect to DB.
-        self.sql = SQL()
+        # # Init SQL-object for connect to DB.
+        # self.sql = SQL()
 
     def browse_directory(self):
         """
@@ -35,21 +36,21 @@ class GUI(Ui_MainWindow):
         """
         try:
             directory = self.lineedit_directory.text()
-            dbf_file_list = [f for f in listdir(directory) if f.lower().endswith('.dbf')]
-            # test_list = ['test1', 'test2', 'test3', 'test4', 'test5']
+            print(directory)
+            dbf_file_list = []
+            for file in listdir(directory):
+                if file.lower().endswith('.dbf'):
+                    stat = os.stat(file)
+                    print(stat)
+            # self.tbl_dbfs.setRowCount(len(dbf_file_list))
             # row = 0
-            # for i in test_list:
-            #     self.tbl_dbfs.setItem(row, 0, QTableWidgetItem(f'{i}'))
+            # while row < len(dbf_file_list):
+            #     item = QTableWidgetItem()
+            #     item.setText(f'{dbf_file_list[row]}')
+            #     item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
+            #     item.setCheckState(Qt.CheckState.Unchecked)
+            #     self.tbl_dbfs.setItem(row, 0, item)
             #     row += 1
-            self.tbl_dbfs.setRowCount(len(dbf_file_list))
-            row = 0
-            while row < len(dbf_file_list):
-                item = QTableWidgetItem()
-                item.setText(f'{dbf_file_list[row]}')
-                item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
-                item.setCheckState(Qt.CheckState.Unchecked)
-                self.tbl_dbfs.setItem(row, 0, item)
-                row += 1
         except WindowsError:
             self.warning_msg('ERROR', 'Select a directory first!')
 
