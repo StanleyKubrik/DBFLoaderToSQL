@@ -1,3 +1,5 @@
-# Exclude DBF files from git.
+.gitignore
 /DBF/
-.DBF
+.idea/
+*.DBF
+__pycache__/

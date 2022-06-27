@@ -196,8 +196,8 @@ class SQL:
     # def base36decode(number):
     #     return int(number, 36)
     #
-
-    def from_36_to_time(self, time_in_36):
-        time_ms = int(time_in_36, 36)
-        time = datetime.fromtimestamp(time_ms / 1000.0)
-        return time.time()
+    #
+    # def from_36_to_time(self, time_in_36):
+    #     time_ms = int(time_in_36, 36)
+    #     time = datetime.fromtimestamp(time_ms / 1000.0)
+    #     return time.time()
