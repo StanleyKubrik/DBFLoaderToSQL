@@ -19,8 +19,8 @@ class GUI(Ui_MainWindow):
 
         self.btn_upload.clicked.connect(self.upload_data)
 
-        # # Init SQL-object for connect to DB.
-        # self.sql = SQL()
+        # Init SQL-object for connect to DB.
+        self.sql = SQL()
 
     def browse_directory(self):
         """
