@@ -51,13 +51,25 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_main">
        <attribute name="title">
         <string>Main</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="sizeConstraint">
@@ -91,7 +103,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Choose directory with DBF files:</string>
+               <string>Select directory with DBF files:</string>
               </property>
              </widget>
             </item>
@@ -139,7 +151,7 @@
              <number>4</number>
             </property>
             <attribute name="horizontalHeaderVisible">
-             <bool>true</bool>
+             <bool>false</bool>
             </attribute>
             <attribute name="horizontalHeaderCascadingSectionResizes">
              <bool>false</bool>
@@ -208,7 +220,7 @@
           <item>
            <widget class="QTextEdit" name="txt_console"/>
           </item>
-          <item>
+          <item alignment="Qt::AlignRight">
            <widget class="QPushButton" name="btn_close">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -230,6 +242,9 @@
             <property name="text">
              <string>Close</string>
             </property>
+            <property name="checkable">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
          </layout>
@@ -241,16 +256,28 @@
         <string>Configuration</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
         <item>
          <layout class="QFormLayout" name="config_column1">
           <property name="rowWrapPolicy">
            <enum>QFormLayout::DontWrapRows</enum>
           </property>
           <property name="leftMargin">
-           <number>5</number>
+           <number>0</number>
           </property>
           <property name="topMargin">
-           <number>5</number>
+           <number>0</number>
           </property>
           <item row="0" column="0">
            <widget class="QLabel" name="lbl_server">
@@ -260,7 +287,11 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QLineEdit" name="lineedit_server"/>
+           <widget class="QLineEdit" name="lineedit_server">
+            <property name="inputMethodHints">
+             <set>Qt::ImhLatinOnly</set>
+            </property>
+           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="lbl_database">
@@ -270,7 +301,11 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QLineEdit" name="lineedit_database"/>
+           <widget class="QLineEdit" name="lineedit_database">
+            <property name="inputMethodHints">
+             <set>Qt::ImhLatinOnly</set>
+            </property>
+           </widget>
           </item>
           <item row="2" column="0">
            <widget class="QLabel" name="lbl_username">
@@ -280,7 +315,11 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="lineedit_username"/>
+           <widget class="QLineEdit" name="lineedit_username">
+            <property name="inputMethodHints">
+             <set>Qt::ImhLatinOnly</set>
+            </property>
+           </widget>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="lbl_password">
@@ -301,10 +340,10 @@
         <item>
          <layout class="QFormLayout" name="config_column2">
           <property name="leftMargin">
-           <number>5</number>
+           <number>0</number>
           </property>
           <property name="topMargin">
-           <number>5</number>
+           <number>0</number>
           </property>
           <item row="0" column="0">
            <widget class="QLabel" name="lb_port">
@@ -326,6 +365,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="inputMethodHints">
+             <set>Qt::ImhDigitsOnly</set>
             </property>
            </widget>
           </item>
