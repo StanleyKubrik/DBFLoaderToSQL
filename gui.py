@@ -54,6 +54,9 @@ class GUI(Ui_MainWindow):
         except WindowsError:
             self.warning_msg('ERROR', 'Select a directory first!')
 
+    def add_table_row(self, table, row_data_tuple):
+        pass
+
     def upload_data(self):
         """
         Uploads selected DBFs into SQL.
