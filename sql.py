@@ -135,7 +135,8 @@ class SQL:
         except ValueError as ve:
             print(ve)
 
-    def fill_field_with_spaces(self, field: str) -> str:
+    @staticmethod
+    def fill_field_with_spaces(field: str) -> str:
         """
         Filling ID fields with spaces according to 1C 7.7 ID format.
         :param field: ID field without spaces.
@@ -148,7 +149,8 @@ class SQL:
         else:
             return str(field).rjust(6) + '   '
 
-    def get_sql_table_name_for_dbf(self, dbf_file_name: str) -> str:
+    @staticmethod
+    def get_sql_table_name_for_dbf(dbf_file_name: str) -> str:
         """
         Getting SQL table name from configuration file according to received DBF file.
         :param dbf_file_name: name of DBF-file.
