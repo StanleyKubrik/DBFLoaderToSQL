@@ -40,17 +40,16 @@ class GUI(Ui_MainWindow):
             dbf_file_list = []
             for file in listdir(directory):
                 if file.lower().endswith('.dbf'):
-                    stat = os.stat(file)
-                    print(stat)
-            # self.tbl_dbfs.setRowCount(len(dbf_file_list))
-            # row = 0
-            # while row < len(dbf_file_list):
-            #     item = QTableWidgetItem()
-            #     item.setText(f'{dbf_file_list[row]}')
-            #     item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
-            #     item.setCheckState(Qt.CheckState.Unchecked)
-            #     self.tbl_dbfs.setItem(row, 0, item)
-            #     row += 1
+                    dbf_file_list.append(file)
+            self.tbl_dbfs.setRowCount(len(dbf_file_list))
+            row = 0
+            while row < len(dbf_file_list):
+                item = QTableWidgetItem()
+                item.setText(f'{dbf_file_list[row]}')
+                item.setFlags(Qt.ItemFlag.ItemIsUserCheckable | Qt.ItemFlag.ItemIsEnabled)
+                item.setCheckState(Qt.CheckState.Unchecked)
+                self.tbl_dbfs.setItem(row, 0, item)
+                row += 1
         except WindowsError:
             self.warning_msg('ERROR', 'Select a directory first!')
 

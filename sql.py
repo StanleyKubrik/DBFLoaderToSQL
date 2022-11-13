@@ -144,7 +144,7 @@ class SQL:
         """
 
         field = field.strip()
-        if len(field) > 1 and str(field).endswith('1'):
+        if len(field) > 2 and str(field).endswith('1'):
             return str(field).rjust(7) + '  '
         else:
             return str(field).rjust(6) + '   '
