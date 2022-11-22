@@ -100,6 +100,12 @@ class SQL:
                 # for v in df[col].values:
                 #     df = df.replace({v: fill_field_with_spaces(v)})
 
+            # Converting TIME from 36 to time for 1SJOURNAL.
+            print(datetime.now().strftime("%H:%M:%S"), '|', 'Converting TIME from 36 to time for 1SJOURNAL...')
+            if dbf_file_from == '1SJOURN.DBF':
+                vfunc = np.vectorize(self.from_36_to_time)
+                df['TIME'] = vfunc(df['TIME'].values)
+
             print(datetime.now().strftime("%H:%M:%S"), '|', 'Looking for exist keys...')
             # Looking for exist keys.
             dropped_rows = 0
@@ -161,7 +167,7 @@ class SQL:
         section_list = re.findall('\d+', dbf_file_name.split('.')[0])
         section = ''.join(section_list)
         if dbf_file_name == '1SJOURN.DBF':
-            return '1SJOURN_test'
+            return '1SJOURN'
         elif dbf_file_name.startswith('DH'):
             return 'DH_' + exchange_cfg.get_setting('Documents', section)
         elif dbf_file_name.startswith('DT'):
@@ -172,6 +178,18 @@ class SQL:
             return 'RA_' + exchange_cfg.get_setting('Registers', section)
         elif dbf_file_name.startswith('RM'):
             return 'RM_' + exchange_cfg.get_setting('Registers', section)
+
+    @staticmethod
+    def from_36_to_time(time_in_36):
+        time_ms = int(time_in_36, 36)
+        millis = time_ms / 10
+        millis = int(millis)
+        seconds = (millis / 1000) % 60
+        seconds = int(seconds)
+        minutes = (millis / (1000 * 60)) % 60
+        minutes = int(minutes)
+        hours = (millis / (1000 * 60 * 60)) % 24
+        return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
     # def base36encode(number, alphabet='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'):
     #     """Converts an integer to a base36 string."""
@@ -199,13 +217,3 @@ class SQL:
     #     return int(number, 36)
     #
     #
-    # def from_36_to_time(self, time_in_36):
-    #     time_ms = int(time_in_36, 36)
-    #     millis = time_ms / 10
-    #     millis = int(millis)
-    #     seconds = (millis / 1000) % 60
-    #     seconds = int(seconds)
-    #     minutes = (millis / (1000 * 60)) % 60
-    #     minutes = int(minutes)
-    #     hours = (millis / (1000 * 60 * 60)) % 24
-    #     return "%02d:%02d:%02d" % (hours, minutes, seconds)
