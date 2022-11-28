@@ -1,3 +1,4 @@
+import sys
 from config import Config
 from gui import GUI
 from PyQt5.QtWidgets import QApplication
@@ -13,7 +14,7 @@ if __name__ == '__main__':
     # sys.exit(app.exec_())
 
     sql = SQL()
-    dbf_file_from = '1SJOURN.DBF'
+    dbf_file_from = 'RA3544.DBF'
     current_path = os.getcwd()
     # for dbf in os.listdir('DBF/'):
     #     sql.load_into_sql_table_from_dbf(os.getcwd() + '\\DBF\\' + dbf)

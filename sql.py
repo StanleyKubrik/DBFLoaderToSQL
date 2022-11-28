@@ -150,7 +150,7 @@ class SQL:
         """
 
         field = field.strip()
-        if len(field) > 2 and str(field).endswith('1'):
+        if len(field) > 2 and (str(field).endswith('1') or not str(field).rjust(1).isdigit()):
             return str(field).rjust(7) + '  '
         else:
             return str(field).rjust(6) + '   '
